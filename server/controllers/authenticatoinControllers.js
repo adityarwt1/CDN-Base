@@ -1,4 +1,4 @@
-import { userRegisterValidations } from "../validations/userValidations"
+import { userRegisterValidations } from "../validations/userValidations.js"
 import { mongoConnect } from "../lib/mongodb.js"
 import bcryptjs from 'bcryptjs'
 import UserModel from "../models/user.js"
@@ -73,6 +73,7 @@ export const registerUserController = async (req, res) => {
     const user = new UserModel({...body, password:hashedPassword})
     await user.save()
 
+    
     
   } catch (error) {
     return res.status(500).json({

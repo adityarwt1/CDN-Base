@@ -1,36 +1,61 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const UserSchema = new mongoose.Schema(
+const RefreshTokenSchema = new Schema(
   {
-    fullName: {
+    token: {
       type: String,
       required: true,
     },
 
-    userName: {
-      type: String,
+    expiresAt: {
+      type: Date,
       required: true,
-      unique: true,
     },
+  },
+  {
+    _id: false,
+  }
+);
 
+const UserSchema = new Schema(
+  {
     email: {
       type: String,
       required: true,
       unique: true,
+      index: true,
+      lowercase: true,
+      trim: true,
     },
 
     password: {
       type: String,
       required: true,
     },
-    refreshToken:{
-        type:String,
-    }
+
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    refreshTokens: {
+      type: [RefreshTokenSchema],
+      default: [],
+    },
   },
   {
     timestamps: true,
   }
 );
+
+// Optional indexes
+UserSchema.index({ email: 1 });
 
 const UserModel =
   mongoose.models.User || mongoose.model("User", UserSchema);
